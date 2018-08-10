@@ -1,0 +1,123 @@
+<style>
+table { border-collapse: collapse;  text-align: left; font-size: 20px; margin: 0;}
+td {
+    padding-bottom: 0.5em;
+}
+tr.spaceUnder>td {
+  padding-bottom: 0em;
+}
+.empty {width: 100px; }
+.table1 { width: 100%; }
+.table2 { width: 40%; }
+.cell2 { width: 115px; }
+td { vertical-align: text-top;}
+</style>
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Brex API</h2>
+  <form>
+    <datalist id="country">
+      <option value="AT"> <option value="AU"><option value="BE"><option value="BG"><option value="CA"><option value="CH"><option value="CN"><option value="CZ"><option value="DE"><option value="DK"><option value="EBR"><option value="HR"><option value="EE"><option value="ES"><option value="FI"><option value="FR"><option value="GG"><option value="GI"><option value="GR"><option value="HK"><option value="ID"><option value="IE"><option value="IT"><option value="LT"><option value="LU"><option value="LV"><option value="MK"><option value="MT"><option value="NL"><option value="NO"><option value="NZ"><option value="PL"><option value="RO"><option value="RU"><option value="RS"><option value="SG"><option value="SE"><option value="SI"><option value="UA"><option value="UK">
+    </datalist>
+    <datalist id="number">
+      <option value="40103708901">
+    </datalist>
+    <label>Country Code: <label>
+    <input type="text" name="country" style="width: 50px" list="country" autocomplete="off">
+    &nbsp
+    <label> Company Number: <label>
+    <input type="text" name="number" style="width: 110px" list="number" autocomplete="off">
+    &nbsp
+    <button type="submit">search</button>
+  </form>
+  <table class="table1">
+  {% if info %}
+
+    <hr>
+    <tr><td>Name:</td>
+    <td>{{info.name}}</td>
+    </tr>
+    <tr><td>ID:</td>
+    <td>{{info.id}}</td>
+  </tr>
+    <tr><td>Registration Number:</td>
+    <td>{{info.registrationNumber}}</td>
+  </tr>
+    <tr><td>Address:</td>
+    <td>
+    {% for part in info.address %}
+      {{part}}<br>
+    {% endfor %}
+  </td>
+    <tr><td>Managing Directors:</td>
+    <td>
+    {% for part in info.managingDirectors %}
+      {{part}}<br>
+    {% endfor %}
+  </td>
+  </tr>
+    <tr><td>Secretaries:</td>
+    <td>
+    {% for part in info.secretaries %}
+      {{part}}<br>
+    {% endfor %}
+  </tr>
+    <tr><td colspan="5">
+      <table class="table2">
+        <tr class="spaceUnder">
+          <td class="cell2">People:</td>
+          <td class="empty">&nbsp;</td>
+          {% for part in info.people %}
+          <td>{{part}}:</td>
+            {% endfor %}
+        </tr>
+        <tr class="spaceUnder">
+          <td>&nbsp;</td>
+          <td>Name:</td>
+          {% for part in info.people.officer %}
+              <td>{{part.name}}</td>
+            {% endfor %}
+        </tr>
+        <tr class="spaceUnder">
+          <td>&nbsp;</td>
+          <td>Role:</td>
+          {% for part in info.people.officer %}
+              <td>{{part.role}}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>Coporate:</td>
+          {% for part in info.people.officer %}
+              <td>{{part.isCorporate}}</td>
+            {% endfor %}
+        </tr>
+      </table>
+    </td>
+    </tr>
+    <tr><td>Date of Incorporation:</td>
+    <td>
+    {% for part in info.dateOfIncorporation %}
+      {{part}}<br>
+    {% endfor %}</td>
+  </tr>
+    <tr><td>Legal Form:</td>
+    <td>
+    {% for part in info.legalForm %}
+      {{part}}<br>
+    {% endfor %}
+  </tr>
+    <tr><td>Status:</td>
+    <td>{{info.status}}</td>
+  </tr>
+    <tr><td>PDF:</td>
+    <td>{{info.pdfUrl}}</td>
+  </tr>
+  <tr>
+    <td>Extra Data:</td>
+    <td>{{info.extraData}}</td>
+  </tr>
+    </table>
+  {% endif %}
+{% endblock %}

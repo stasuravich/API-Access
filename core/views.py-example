@@ -1,0 +1,30 @@
+from django.shortcuts import render
+from django.conf import settings
+import requests
+from django.core.files.storage import FileSystemStorage
+import os.path
+
+def brex(request):
+    Table= []
+    company = {}
+    headers = {
+        'accept': 'application/json',
+        'user_key': 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    if 'country' in request.GET and 'number' in request.GET:
+        country = request.GET['country']
+        number = request.GET['number']
+        url1 = 'https://api.brex.io/api/v1/company/search/number/%s' % country + '/' + number
+        info = requests.get(url1, headers=headers)
+        if info.status_code ==200:
+            id=info.json()[0]['id']
+            url2='https://api.brex.io/api/v1/company/%s' % id + '/super/'+ country
+            company = requests.get(url2, headers=headers)
+            if company.status_code==200:
+                company=company.json()
+                completePath=os.path.join(r'C:\Users\sybarano\Documents\restful-apis-example\static', 'text.txt')
+                f=open(completePath, 'w')
+                f.write(str(repr(company).encode("utf-8")))
+                return render(request, 'core/brex.html', {'info': company})
+    return render(request, 'core/brex.html', {'info': {}})
